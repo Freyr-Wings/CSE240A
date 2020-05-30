@@ -27,13 +27,13 @@ struct GShare * NewGShare(int num_history_bit, int num_predict_bit) {
     return predictor;
 }
 
-uint8_t predict(struct GShare *predictor, uint32_t pc) {
+uint8_t gshare_predict(struct GShare *predictor, uint32_t pc) {
     int key = get_part(predictor->history ^ pc, predictor->num_history_bit-1, 0);
     uint8_t prediction = get_bit(predictor->predict_table[key], predictor->num_predict_bit);
     return prediction;
 }
 
-void train(struct GShare *predictor, uint32_t pc, uint8_t outcome) {
+void gshare_train(struct GShare *predictor, uint32_t pc, uint8_t outcome) {
     int key = get_part(predictor->history ^ pc, predictor->num_history_bit-1, 0);
     uint8_t prediction = predictor->predict_table[key];
     if (outcome == TAKEN) {

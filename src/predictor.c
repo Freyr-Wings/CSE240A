@@ -8,13 +8,14 @@
 #include <stdio.h>
 #include "predictor.h"
 #include "gshare.h"
+#include "tournament.h"
 
 //
 // TODO:Student Information
 //
-const char *studentName = "Binlu Wang";
-const char *studentID   = "A53316819";
-const char *email       = "b8wang@ucsd.edu";
+const char *studentName = "Binlu Wang, Kai Wang";
+const char *studentID   = "A53316819, A53319240";
+const char *email       = "b8wang@ucsd.edu, wkai@eng.ucsd.edu";
 
 //------------------------------------//
 //      Predictor Configuration       //
@@ -41,6 +42,7 @@ int verbose;
 
 
 struct GShare * gshare_predictor = NULL;
+struct Tournament * tournament_predictor = NULL;
 
 
 
@@ -64,6 +66,8 @@ init_predictor()
             gshare_predictor = NewGShare(ghistoryBits, 2);
             break;
         case TOURNAMENT:
+            tournament_predictor = new_tournament(ghistoryBits, lhistoryBits, pcIndexBits);
+            break;
         case CUSTOM:
         default:
             break;
@@ -86,8 +90,9 @@ make_prediction(uint32_t pc)
         case STATIC:
             return TAKEN;
         case GSHARE:
-            return predict(gshare_predictor, pc);
+            return gshare_predict(gshare_predictor, pc);
         case TOURNAMENT:
+            return tournament_predict(tournament_predictor, pc);
         case CUSTOM:
         default:
             break;
@@ -105,8 +110,11 @@ train_predictor(uint32_t pc, uint8_t outcome)
     //
     switch (bpType) {
         case GSHARE:
-            train(gshare_predictor, pc, outcome);
+            gshare_train(gshare_predictor, pc, outcome);
+            break;
         case TOURNAMENT:
+            tournament_train(tournament_predictor, pc, outcome);
+            break;
         case CUSTOM:
         default:
             break;
