@@ -2,3 +2,4 @@
 src/predictor
 .idea
 CmakeLists.txt
+cmake-build-debug
