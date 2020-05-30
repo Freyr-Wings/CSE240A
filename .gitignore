@@ -1,2 +1,4 @@
 *.o
 src/predictor
+.idea
+CmakeLists.txt

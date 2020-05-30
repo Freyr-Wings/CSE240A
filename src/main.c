@@ -77,6 +77,7 @@ read_branch(uint32_t *pc, uint8_t *outcome)
   return 1;
 }
 
+// bunzip2 -kc ../traces/int_1.bz2 | ./predictor --gshare:10
 int
 main(int argc, char *argv[])
 {

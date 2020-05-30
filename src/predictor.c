@@ -7,13 +7,14 @@
 //========================================================//
 #include <stdio.h>
 #include "predictor.h"
+#include "gshare.h"
 
 //
 // TODO:Student Information
 //
-const char *studentName = "NAME";
-const char *studentID   = "PID";
-const char *email       = "EMAIL";
+const char *studentName = "Binlu Wang";
+const char *studentID   = "A53316819";
+const char *email       = "b8wang@ucsd.edu";
 
 //------------------------------------//
 //      Predictor Configuration       //
@@ -38,6 +39,11 @@ int verbose;
 //
 
 
+
+struct GShare * gshare_predictor = NULL;
+
+
+
 //------------------------------------//
 //        Predictor Functions         //
 //------------------------------------//
@@ -50,6 +56,18 @@ init_predictor()
   //
   //TODO: Initialize Branch Predictor Data Structures
   //
+
+    switch (bpType) {
+        case STATIC:
+            break;
+        case GSHARE:
+            gshare_predictor = NewGShare(ghistoryBits, 2);
+            break;
+        case TOURNAMENT:
+        case CUSTOM:
+        default:
+            break;
+    }
 }
 
 // Make a prediction for conditional branch instruction at PC 'pc'
@@ -59,33 +77,38 @@ init_predictor()
 uint8_t
 make_prediction(uint32_t pc)
 {
-  //
-  //TODO: Implement prediction scheme
-  //
+    //
+    //TODO: Implement prediction scheme
+    //
 
-  // Make a prediction based on the bpType
-  switch (bpType) {
-    case STATIC:
-      return TAKEN;
-    case GSHARE:
-    case TOURNAMENT:
-    case CUSTOM:
-    default:
-      break;
-  }
+    // Make a prediction based on the bpType
+    switch (bpType) {
+        case STATIC:
+            return TAKEN;
+        case GSHARE:
+            return predict(gshare_predictor, pc);
+        case TOURNAMENT:
+        case CUSTOM:
+        default:
+            break;
+    }
 
-  // If there is not a compatable bpType then return NOTTAKEN
-  return NOTTAKEN;
+    // If there is not a compatable bpType then return NOTTAKEN
+    return NOTTAKEN;
 }
 
-// Train the predictor the last executed branch at PC 'pc' and with
-// outcome 'outcome' (true indicates that the branch was taken, false
-// indicates that the branch was not taken)
-//
 void
 train_predictor(uint32_t pc, uint8_t outcome)
 {
-  //
-  //TODO: Implement Predictor training
-  //
+    //
+    //TODO: Implement Predictor training
+    //
+    switch (bpType) {
+        case GSHARE:
+            train(gshare_predictor, pc, outcome);
+        case TOURNAMENT:
+        case CUSTOM:
+        default:
+            break;
+    }
 }

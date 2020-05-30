@@ -1,0 +1,1 @@
+/usr/bin/cc -g  -rdynamic CMakeFiles/predictor.dir/src/main.c.o CMakeFiles/predictor.dir/src/predictor.c.o  -o predictor 
