@@ -27,20 +27,20 @@ struct Tournament * new_tournament(int ghistoryBits, int lhistoryBits, int pcInd
     predictor->lhistoryBits = lhistoryBits;
     predictor->pcIndexBits = pcIndexBits;
     predictor->globalHistory = 0;
-    predictor->localHistory = (uint16_t *)malloc(sizeof(uint16_t)*(1 << lhistoryBits));
-    predictor->localHistoryPredictTable = (uint8_t *)malloc(sizeof(uint8_t)*(1 << pcIndexBits));
+    predictor->localHistory = (uint16_t *)malloc(sizeof(uint16_t)*(1 << pcIndexBits));
+    predictor->localHistoryPredictTable = (uint8_t *)malloc(sizeof(uint8_t)*(1 << lhistoryBits));
     predictor->globalHistoryPredictTable = (uint8_t *)malloc(sizeof(uint8_t)*(1 << ghistoryBits));
     predictor->choiceHistoryPredictTable = (uint8_t *)malloc(sizeof(uint8_t)*(1 << ghistoryBits));
-    memset(predictor->localHistory, 0, sizeof(uint16_t)*(1 << lhistoryBits));
-    memset(predictor->localHistoryPredictTable, 0, sizeof(uint8_t)*(1 << pcIndexBits));
+    memset(predictor->localHistory, 0, sizeof(uint16_t)*(1 << pcIndexBits));
+    memset(predictor->localHistoryPredictTable, 0, sizeof(uint8_t)*(1 << lhistoryBits));
     memset(predictor->globalHistoryPredictTable, 0, sizeof(uint8_t)*(1 << ghistoryBits));
     memset(predictor->choiceHistoryPredictTable, 0, sizeof(uint8_t)*(1 << ghistoryBits));
     return predictor;
 }
 
 uint8_t tournament_predict(struct Tournament *predictor, uint32_t pc) {
-    int lv1Key = get_part(pc, predictor->lhistoryBits-1, 0);
-    int lv2Key = get_part(predictor->localHistory[lv1Key], predictor->pcIndexBits-1, 0);
+    int lv1Key = get_part(pc, predictor->pcIndexBits-1, 0);
+    int lv2Key = get_part(predictor->localHistory[lv1Key], predictor->lhistoryBits-1, 0);
     uint8_t localPrediction = get_bit(predictor->localHistoryPredictTable[lv2Key], 2);
 
     int globalKey = get_part(predictor->globalHistory, predictor->ghistoryBits-1, 0);
@@ -93,12 +93,12 @@ uint8_t update_choice_prediction(uint8_t p1, uint8_t p2, uint8_t oldValue, uint8
 }
 
 void tournament_train(struct Tournament *predictor, uint32_t pc, uint8_t outcome) {
-    int lv1Key = get_part(pc, predictor->lhistoryBits-1, 0);
-    int lv2Key = get_part(predictor->localHistory[lv1Key], predictor->pcIndexBits-1, 0);
+    int lv1Key = get_part(pc, predictor->pcIndexBits-1, 0);
+    int lv2Key = get_part(predictor->localHistory[lv1Key], predictor->lhistoryBits-1, 0);
     uint8_t localPrediction = get_bit(predictor->localHistoryPredictTable[lv2Key], 2);
     predictor->localHistoryPredictTable[lv2Key] = update_2bit_prediction(predictor->localHistoryPredictTable[lv2Key], outcome, 2);
 
-    predictor->localHistory[lv1Key] = get_part((predictor->localHistory[lv1Key] << 1u) + outcome, predictor->lhistoryBits-1, 0);
+    predictor->localHistory[lv1Key] = get_part((predictor->localHistory[lv1Key] << 1u) + outcome, predictor->pcIndexBits-1, 0);
 
     int globalKey = get_part(predictor->globalHistory, predictor->ghistoryBits-1, 0);
     uint8_t globalPrediction = get_bit(predictor->globalHistoryPredictTable[globalKey], 2);
