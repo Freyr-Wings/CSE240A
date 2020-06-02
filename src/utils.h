@@ -19,5 +19,14 @@ uint32_t get_bit(uint32_t addr, uint32_t num) {
     return (addr >> (num-1)) & 1u;
 }
 
+uint32_t fold(uint32_t addr, uint32_t num) {
+    uint32_t result = 0;
+    while (addr > 0) {
+        result ^= get_part(addr, num-1, 0);
+        addr >>= num;
+    }
+    return result;
+}
+
 
 #endif //PREDICTOR_UTILS_H

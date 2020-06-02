@@ -9,6 +9,7 @@
 #include "predictor.h"
 #include "gshare.h"
 #include "tournament.h"
+#include "tage.h"
 
 //
 // TODO:Student Information
@@ -43,6 +44,7 @@ int verbose;
 
 struct GShare * gshare_predictor = NULL;
 struct Tournament * tournament_predictor = NULL;
+struct TAGE * tage_predictor = NULL;
 
 
 
@@ -63,12 +65,13 @@ init_predictor()
         case STATIC:
             break;
         case GSHARE:
-            gshare_predictor = NewGShare(ghistoryBits, 2);
+            gshare_predictor = NewGShare(ghistoryBits, ghistoryBits, 2);
             break;
         case TOURNAMENT:
             tournament_predictor = new_tournament(ghistoryBits, lhistoryBits, pcIndexBits);
             break;
         case CUSTOM:
+            tage_predictor = NewTAGE(4);
         default:
             break;
     }
@@ -94,6 +97,7 @@ make_prediction(uint32_t pc)
         case TOURNAMENT:
             return tournament_predict(tournament_predictor, pc);
         case CUSTOM:
+            return tage_predict(tage_predictor, pc);
         default:
             break;
     }
@@ -116,6 +120,8 @@ train_predictor(uint32_t pc, uint8_t outcome)
             tournament_train(tournament_predictor, pc, outcome);
             break;
         case CUSTOM:
+            tage_train(tage_predictor, pc, outcome);
+            break;
         default:
             break;
     }
