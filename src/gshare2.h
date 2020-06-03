@@ -16,17 +16,17 @@ struct GShare2 {
     int num_predict_bit;
     int num_key_bit;
     struct History *history;
-    uint8_t *predict_table;
+    uint16_t *predict_table;
 };
 
 struct GShare2 * NewGShare2(int num_history_bit, int num_key_bit, int num_predict_bit) {
-    struct GShare2 *predictor = (struct GShare2 *)malloc(sizeof(struct GShare));
+    struct GShare2 *predictor = (struct GShare2 *)malloc(sizeof(struct GShare2));
     predictor->num_history_bit = num_history_bit;
     predictor->num_key_bit = num_key_bit;
     predictor->num_predict_bit = num_predict_bit;
     predictor->history = NewHistory(num_history_bit);
-    predictor->predict_table = (uint8_t *)malloc(sizeof(uint8_t)*(1 << num_key_bit));
-    memset(predictor->predict_table, 0, sizeof(uint8_t)*(1 << num_key_bit));
+    predictor->predict_table = (uint16_t *)malloc(sizeof(uint16_t)*(1 << num_key_bit));
+    memset(predictor->predict_table, 0, sizeof(uint16_t)*(1 << num_key_bit));
     return predictor;
 }
 

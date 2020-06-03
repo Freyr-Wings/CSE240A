@@ -9,7 +9,7 @@
 #include "predictor.h"
 #include "gshare.h"
 #include "tournament.h"
-#include "tage.h"
+#include "tage2.h"
 #include "perceptron.h"
 
 //
@@ -73,7 +73,7 @@ init_predictor()
             tournament_predictor = new_tournament(ghistoryBits, lhistoryBits, pcIndexBits);
             break;
         case CUSTOM:
-            tage_predictor = NewTAGE(4);
+            tage_predictor = NewTAGE();
 //            perceptron_predictor = new_perceptron(ghistoryBits, pcIndexBits);
             break;
         default:

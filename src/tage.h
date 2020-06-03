@@ -33,20 +33,6 @@ struct TAGE * NewTAGE(int num_gshare) {
     return predictor;
 }
 
-//uint8_t tage_predict(struct TAGE *predictor, uint32_t pc) {
-//    int taken = 0;
-//    int total = 0;
-//    for (int i = 0; i < predictor->num_gshare; ++i) {
-//        uint8_t prediction = gshare_predict(predictor->predictors[i],pc);
-//        taken += prediction * predictor->weights[i];
-//        total += predictor->weights[i];
-//    }
-//    if ((total / 2) > taken) {
-//        return NOTTAKEN;
-//    }
-//    return TAKEN;
-//}
-
 uint8_t tage_predict(struct TAGE *predictor, uint32_t pc) {
     int max_weight = -1;
     int max_idx = -1;
@@ -79,7 +65,5 @@ void tage_train(struct TAGE *predictor, uint32_t pc, uint8_t outcome) {
         gshare2_train(predictor->predictors[i], pc, outcome);
     }
 }
-
-
 
 #endif //PREDICTOR_TAGE_H
