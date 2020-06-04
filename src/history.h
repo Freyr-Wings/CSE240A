@@ -45,7 +45,7 @@ uint32_t get_part_history(struct History * history, uint32_t start, uint32_t end
 
     uint32_t result = 0;
     result |= get_part(history->bits[end_num], 31, end_part);
-    result |= get_part(history->bits[start_num], start_part, 0) << (start - end - 31 - end_part);
+    result |= get_part(history->bits[start_num], start_part, 0) << (31 - end_part + 1);
     return result;
 }
 
