@@ -54,7 +54,7 @@ uint32_t fold_history(struct History * history, uint32_t limit) {
     uint32_t end = 0;
     uint32_t result = 0;
 
-    while (end <= history->length) {
+    while (end < history->length - 1) {
         result ^= get_part_history(history, start, end);
         start += limit;
         end += limit;
