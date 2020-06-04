@@ -28,8 +28,9 @@ void add_history(struct History * history, uint8_t bit) {
         history->bits[i] <<= 1u;
         history->bits[i] |= history->bits[i+1] & history->high_mark;
     }
-    history->bits[history->num] <<= 1u;
-    history->bits[history->num] |= bit & 1u;
+    history->bits[history->num - 1] <<= 1u;
+    history->bits[history->num - 1] |= bit & 1u;
+    history->bits[history->num - 1] = get_part(history->bits[history->num - 1], history->length % 32 - 1, 0);
 }
 
 uint32_t get_part_history(struct History * history, uint32_t start, uint32_t end) {
