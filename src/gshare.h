@@ -26,7 +26,11 @@ struct GShare * NewGShare(int num_history_bit, int num_key_bit, int num_predict_
     predictor->num_predict_bit = num_predict_bit;
     predictor->history = NewHistory(num_history_bit);
     predictor->predict_table = (uint8_t *)malloc(sizeof(uint8_t)*(1 << num_key_bit));
-    memset(predictor->predict_table, 0, sizeof(uint8_t)*(1 << num_key_bit));
+    int num_entry = 1 << num_key_bit;
+    for (int i = 0; i < num_entry; ++i) {
+        predictor->predict_table[i] = 1u;
+    }
+//    memset(predictor->predict_table, 0, sizeof(uint8_t)*(1 << num_key_bit));
     return predictor;
 }
 
