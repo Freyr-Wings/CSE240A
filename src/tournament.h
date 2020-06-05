@@ -32,9 +32,9 @@ struct Tournament * new_tournament(int ghistoryBits, int lhistoryBits, int pcInd
     predictor->globalHistoryPredictTable = (uint8_t *)malloc(sizeof(uint8_t)*(1 << ghistoryBits));
     predictor->choiceHistoryPredictTable = (uint8_t *)malloc(sizeof(uint8_t)*(1 << ghistoryBits));
     memset(predictor->localHistory, 0, sizeof(uint16_t)*(1 << pcIndexBits));
-    memset(predictor->localHistoryPredictTable, 0, sizeof(uint8_t)*(1 << lhistoryBits));
-    memset(predictor->globalHistoryPredictTable, 0, sizeof(uint8_t)*(1 << ghistoryBits));
-    memset(predictor->choiceHistoryPredictTable, 0, sizeof(uint8_t)*(1 << ghistoryBits));
+    memset(predictor->localHistoryPredictTable, 1, sizeof(uint8_t)*(1 << lhistoryBits));
+    memset(predictor->globalHistoryPredictTable, 1, sizeof(uint8_t)*(1 << ghistoryBits));
+    memset(predictor->choiceHistoryPredictTable, 1, sizeof(uint8_t)*(1 << ghistoryBits));
     return predictor;
 }
 
@@ -80,11 +80,11 @@ uint8_t update_choice_prediction(uint8_t p1, uint8_t p2, uint8_t oldValue, uint8
     }
 
     uint8_t newValue = oldValue;
-    if (p1Correct - p2Correct > 0) {
+    if (p1Correct - p2Correct == 1) {
         if (oldValue < ((1u << (uint8_t)predictBits) - 1u)) {
             newValue ++;
         }
-    } else if (p1Correct - p2Correct < 0) {
+    } else if (p1Correct - p2Correct == -1) {
         if (oldValue > 0) {
             newValue --;
         }

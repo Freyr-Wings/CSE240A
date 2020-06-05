@@ -9,7 +9,6 @@
 #include "predictor.h"
 #include "gshare.h"
 #include "tournament.h"
-#include "tage2.h"
 #include "perceptron.h"
 
 //
@@ -45,7 +44,6 @@ int verbose;
 
 struct GShare * gshare_predictor = NULL;
 struct Tournament * tournament_predictor = NULL;
-struct TAGE * tage_predictor = NULL;
 struct Perceptron * perceptron_predictor = NULL;
 
 
@@ -73,8 +71,7 @@ init_predictor()
             tournament_predictor = new_tournament(ghistoryBits, lhistoryBits, pcIndexBits);
             break;
         case CUSTOM:
-            tage_predictor = NewTAGE();
-//            perceptron_predictor = new_perceptron(ghistoryBits, pcIndexBits);
+            perceptron_predictor = new_perceptron();
             break;
         default:
             break;
@@ -101,8 +98,7 @@ make_prediction(uint32_t pc)
         case TOURNAMENT:
             return tournament_predict(tournament_predictor, pc);
         case CUSTOM:
-            return tage_predict(tage_predictor, pc);
-//            return perceptron_predict(perceptron_predictor, pc);
+            return perceptron_predict(perceptron_predictor, pc);
         default:
             break;
     }
@@ -125,8 +121,7 @@ train_predictor(uint32_t pc, uint8_t outcome)
             tournament_train(tournament_predictor, pc, outcome);
             break;
         case CUSTOM:
-            tage_train(tage_predictor, pc, outcome);
-//            perceptron_train(perceptron_predictor, pc, outcome);
+            perceptron_train(perceptron_predictor, pc, outcome);
             break;
         default:
             break;
